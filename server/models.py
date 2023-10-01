@@ -11,5 +11,4 @@ class Message(Base):
     sender = Column(String, index=True)
     text = Column(String)
     created_at = Column(DateTime, server_default=func.now())
-    user_message_number = Column(Integer, default=0)
     user_message_count = Column(Integer, default=0)

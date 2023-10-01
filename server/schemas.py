@@ -11,8 +11,11 @@ class MessageIn(BaseModel):
 
 class MessageOut(BaseModel):
     """Схема для исходящего JSON-сообщения"""
+    id: int
     sender: str
     text: str
     created_at: datetime
-    message_number: int
     user_message_count: int
+
+    class Config:
+        from_attributes = True

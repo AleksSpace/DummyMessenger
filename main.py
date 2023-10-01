@@ -3,7 +3,7 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import ResponseValidationError
 from fastapi.responses import JSONResponse
 
-from database import Base, engine, create_tables_if_not_exist
+from database import Base, create_tables_if_not_exist
 from server.router import router
 
 app = FastAPI(
@@ -14,7 +14,7 @@ app = FastAPI(
 @app.on_event("startup")
 async def startup_event():
     """Создаёт все таблицы при запуске приложения"""
-    await create_tables_if_not_exist()
+    create_tables_if_not_exist()
 
 
 @app.exception_handler(ResponseValidationError)
