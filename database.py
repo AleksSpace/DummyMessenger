@@ -1,5 +1,6 @@
 from sqlalchemy import text, create_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
+from sqlalchemy.pool import NullPool
 from sqlalchemy.sql.ddl import CreateTable
 
 from config_server import DB_USER, DB_PASS, DB_HOST, DB_PORT, DB_NAME
@@ -12,7 +13,7 @@ class Base(DeclarativeBase):
     pass
 
 
-engin_sync = create_engine(DATABASE_URL)
+engin_sync = create_engine(DATABASE_URL, poolclass=NullPool)
 session_maker = sessionmaker(engin_sync, expire_on_commit=False)
 
 
@@ -36,3 +37,8 @@ def create_tables_if_not_exist():
                 for table_name in new_table_names:
                     table = Base.metadata.tables[table_name]
                     session.execute(CreateTable(table))
+
+
+def get_session():
+    with session_maker() as session:
+        yield session

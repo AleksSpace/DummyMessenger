@@ -2,41 +2,72 @@ version: "3.3"
 
 services:
   postgres:
-    image: postgres:15.2
-    container_name: my_postgres_container
+    image: postgres:12.13-alpine
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - "5432:5432"
+      POSTGRES_DB: default
+      POSTGRES_USER: default
+      POSTGRES_PASSWORD: password
+    networks:
+      - local_network
 
-  server1:
+  nginx:
+    image: nginx:1.24.0-alpine
+    ports:
+      - 80:80
+    volumes:
+      - ./docker/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - local_network
+    depends_on:
+      - server
+
+  server:
     build:
       context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8000:8000"
+      dockerfile: ./docker/server/Dockerfile
+    command: uvicorn main:app --host 0.0.0.0 --port 8000
+    deploy:
+      mode: replicated
+      replicas: 2
+    volumes:
+      - .:/app
     environment:
       DB_HOST: postgres
       DB_PORT: 5432
-      DB_NAME: postgres
-      DB_USER: postgres
-      DB_PASS: postgres
+      DB_NAME: default
+      DB_USER: default
+      DB_PASS: password
+    networks:
+      - local_network
     depends_on:
       - postgres
 
-  server2:
+  client:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ./docker/client/Dockerfile
+    command: python client/send_request.py
+    volumes:
+      - .:/app
+    networks:
+      - local_network
+    depends_on:
+      - server
+
+  pgadmin:
+    image: dpage/pgadmin4:6.18
     ports:
-      - "8001:8000"
+      - "5051:80"
+    volumes:
+      - ./.pgadmin:/var/lib/pgadmin
     environment:
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_NAME: postgres
-      DB_USER: postgres
-      DB_PASS: postgres
+      - PGADMIN_DEFAULT_EMAIL=default@mail.ru
+      - PGADMIN_DEFAULT_PASSWORD=password
+    networks:
+      - local_network
     depends_on:
       - postgres
+
+networks:
+  local_network:
+    driver: bridge
