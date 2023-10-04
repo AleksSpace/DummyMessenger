@@ -1,3 +1,6 @@
 /venv/
 .idea
 .env
+/error_client.log
+/error_server.log
+/.pgadmin/
