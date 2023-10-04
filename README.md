@@ -12,9 +12,9 @@
 
 Клонируйте репозиторий к себе на компьютер:  
 
-`
-https://github.com/AleksSpace/DummyMessenger.git
-`
+```
+git clone https://github.com/AleksSpace/DummyMessenger.git
+```
 
 # Запуск:
 Запуск локально через терминал:
