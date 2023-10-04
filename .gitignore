@@ -4,3 +4,4 @@
 /error_client.log
 /error_server.log
 /.pgadmin/
+__pycache__/
