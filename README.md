@@ -21,6 +21,7 @@ git clone https://github.com/AleksSpace/DummyMessenger.git
  - разверните виртуальное окружение командой ` python -m venv venv `
  - активируйте виртуальное окружение командой ` .\venv\Scripts\activate `
  - установите зависимости командой ` python -m pip install -r requirements.txt `
+ - создайте файл .env по примеру файла .env.example в корневой директории (там где файл main.py)
  - откройте первый терминал в корневой папке приложения (там где файл main.py)
  - введите команду ``` uvicorn main:app --reload --port 8002 ``` (сервер запуститься по адресу ` http://127.0.0.1:8002 `)
  - откройте второй терминал в корневой папке приложения (там где файл main.py)
