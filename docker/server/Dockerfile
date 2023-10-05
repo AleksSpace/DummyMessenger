@@ -6,6 +6,7 @@ RUN apt-get update \
         postgresql-client \
         netcat-traditional \
         python3-dev \
+        dos2unix \
     && rm -rf /var/lib/apt/lists/*
 
 # Устанавливаем рабочую директорию
@@ -18,4 +19,6 @@ RUN pip install -r requirements.txt
 COPY ./docker/server/entrypoint.sh /usr/local/bin/
 RUN chmod 755 /usr/local/bin/entrypoint.sh
 
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+RUN dos2unix /usr/local/bin/entrypoint.sh
+
+ENTRYPOINT ["/bin/bash", "/usr/local/bin/entrypoint.sh"]
